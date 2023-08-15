@@ -1,67 +1,77 @@
 import "../style/index.css";
 
 /**
- *  EDIT ONLY INSIDE THIS RENDER FUNCTION
- *  This function is called every time the user changes types or changes any input
- * 
-    {
-        includeCover: true, // if includeCover is true the algorithm should
-        background: "https://images.unsplash.com/photo-1511974035430-5de47d3b95da", // this is the url of the image that will used as background for the profile cover
-        avatarURL: "https://randomuser.me/api/portraits/women/42.jpg", // this is the url for the profile avatar
-        socialMediaPosition: "left", // social media bar position (left or right)
-        
-        twitter: null, // social media usernames
-        github: null,
-        linkedin: null,
-        instagram: null,
-
-        name: null,
-        lastname: null,
-        role: null,
-        country: null,
-        city: null
-    }
+ *  EDITAR SOLO DENTRO DE ESTA FUNCIÓN DE RENDERIZADO
+ *  Esta función se llama cada vez que el usuario cambia los tipos o cambia cualquier entrada
  */
 function render(variables = {}) {
-  console.log("These are the current variables: ", variables); //print on the console
-  // here we ask the logical questions to make decisions on how to build the html
-  // if includeCover==false then we reset the cover code without the <img> tag to make the cover transparent.
-  let cover = `<div class="cover"><img src="${variables.background}" /></div>`;
-  if (variables.includeCover == false) cover = "<div class='cover'></div>";
+  console.log("Estas son las variables actuales: ", variables);
 
-  // reset the website body with the new html output
-  document.querySelector("#widget_content").innerHTML = `<div class="widget">
-            ${cover}
-          <img src="${variables.avatarURL}" class="photo" />
-          <h1>Lucy Boilett</h1>
-          <h2>Web Developer</h2>
-          <h3>Miami, USA</h3>
-          <ul class="position-right">
-            <li><a href="https://twitter.com/4geeksacademy"><i class="fab fa-twitter"></i></a></li>
-            <li><a href="https://github.com/4geeksacademy"><i class="fab fa-github"></i></a></li>
-            <li><a href="https://linkedin.com/4geeksacademy"><i class="fab fa-linkedin"></i></a></li>
-            <li><a href="https://instagram.com/4geeksacademy"><i class="fab fa-instagram"></i></a></li>
-          </ul>
-        </div>
-    `;
+  // Aquí realizamos las comprobaciones lógicas para construir el HTML de acuerdo a las condiciones
+  let cover = `<div class="cover"><img src="${variables.background}" /></div>`;
+  if (variables.includeCover === false) cover = "<div class='cover'></div>";
+
+  // Actualizamos el contenido del elemento con el nuevo HTML generado
+  document.querySelector("#widget_content").innerHTML = `
+    <div class="widget">
+      ${cover}
+      <img src="${variables.avatarURL}" class="photo" />
+      <h1>${variables.name ? variables.name : ""}
+          ${variables.lastname ? variables.lastname : ""}
+      </h1>
+      <h2>${variables.role ? variables.role : ""}</h2>
+      <h3>${variables.country ? variables.country : ""} 
+          ${variables.city ? variables.city : ""}
+      </h3>${
+        variables.socialMediaPosition === "position-left"
+          ? `<ul class="position-left">`
+          : `<ul class="position-right">`
+      }
+
+      ${
+        variables.twitter
+          ? `<li><a href="https://twitter.com/4geeksacademy">
+            <i class="fab fa-twitter"></i>
+            </a>
+          </li>`
+          : ""
+      }
+      ${
+        variables.github
+          ? `<li><a href="https://github.com/4geeksacademy"><i class="fab fa-github"></i></a></li>`
+          : ""
+      }
+      ${
+        variables.linkedin
+          ? `<li><a href="https://linkedin.com/4geeksacademy"><i class="fab fa-linkedin"></i></a></li>`
+          : ""
+      }
+      ${
+        variables.instagram
+          ? `<li><a href="https://instagram.com/4geeksacademy"><i class="fab fa-instagram"></i></a></li>`
+          : ""
+      }
+    </ul>
+  </div>
+`;
 }
 
 /**
- * Don't change any of the lines below, here is where we do the logic for the dropdowns
+ * No cambies ninguna de las líneas a continuación, aquí es donde se realiza la lógica para los desplegables
  */
 window.onload = function() {
   window.variables = {
-    // if includeCover is true the algorithm should
+    //si includeCover es true el algoritmo debería
     includeCover: true,
-    // this is the url of the image that will used as background for the profile cover
+    // esta es la url de la imagen que se usará como fondo para la portada del perfil
     background: "https://images.unsplash.com/photo-1511974035430-5de47d3b95da",
-    // this is the url for the profile avatar
+    // esta es la url para el avatar del perfil
     avatarURL: "https://randomuser.me/api/portraits/women/42.jpg",
-    // social media bar position (left or right)
+    // posición de la barra de redes sociales (izquierda o derecha)
     socialMediaPosition: "position-left",
-    // social media usernames
+    // nombres de usuario de las redes sociales
     twitter: null,
-    github: "alesanchezr",
+    github: null,
     linkedin: null,
     instagram: null,
     name: null,
@@ -70,12 +80,12 @@ window.onload = function() {
     country: null,
     city: null
   };
-  render(window.variables); //render the card for the first time
+  render(window.variables); //renderiza la card por primera vez
 
   document.querySelectorAll(".picker").forEach(function(elm) {
     elm.addEventListener("change", function(e) {
-      // <- add a listener to every input
-      const attribute = e.target.getAttribute("for"); // when any input changes, collect the value
+      // se añade un evento de escucha a todos los input
+      const attribute = e.target.getAttribute("for"); //cuando cualquierinput cambia, recoge su valor
       let values = {};
       values[attribute] =
         this.value == "" || this.value == "null"
@@ -85,7 +95,7 @@ window.onload = function() {
           : this.value == "false"
           ? false
           : this.value;
-      render(Object.assign(window.variables, values)); // render again the card with new valus
+      render(Object.assign(window.variables, values)); //renderiza otra vez la card con los nuevos valores
     });
   });
 };
